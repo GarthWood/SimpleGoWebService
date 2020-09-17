@@ -2,7 +2,7 @@
 package model
 
 // The cart model hold information related to a user's cart.
-type CartModel struct {
-	Id       string   `json:"id"`
-	Products []string `json:"products"`
+type Cart struct {
+	Id       string    `json:"id"`
+	Products []Product `json:"products"`
 }

@@ -20,6 +20,7 @@ type CartRoutes struct {
 // Creates a new cart router.
 func (recv *CartRoutes) Create(router *mux.Router) {
 	router.HandleFunc(path("/v1/cart/{0}", cartIdPathParam), recv.getCart).Methods("GET")
+	router.HandleFunc(path("/v1/cart"), recv.createCart).Methods("POST")
 }
 
 // The handler for the GET cart route.
@@ -27,5 +28,12 @@ func (recv *CartRoutes) getCart(w http.ResponseWriter, req *http.Request) {
 
 	vars := mux.Vars(req)
 	response := recv.Controller.GetCart(vars[cartIdPathParam])
+	writeResponse(response, w)
+}
+
+// The handler for the CREATE cart route.
+func (recv *CartRoutes) createCart(w http.ResponseWriter, req *http.Request) {
+
+	response := recv.Controller.CreateCart()
 	writeResponse(response, w)
 }

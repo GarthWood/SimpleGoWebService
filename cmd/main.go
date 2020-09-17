@@ -20,8 +20,8 @@ import (
 var cartController controllers.CartController
 
 // services
-var userService services.UserService
-var cartService services.CartService
+var userService services.HttpUserService
+var cartService services.InMemoryCartService
 
 // middleware
 var securityFilter filters.SecurityFilter

@@ -21,12 +21,12 @@ func TestGetCart(t *testing.T) {
 
 		// object under test
 		cartController := &CartController{
-			CartReader: cartReaderMock,
+			Reader: cartReaderMock,
 		}
 
 		const CartId = "cart1234"
 
-		cartModel := &model.CartModel{
+		cartModel := &model.Cart{
 			Id: CartId,
 		}
 
@@ -41,7 +41,7 @@ func TestGetCart(t *testing.T) {
 
 		Convey("It should return a valid response", func() {
 			So(response.GetStatus(), ShouldEqual, http.StatusOK)
-			So(response.GetBody().(*model.CartModel).Id, ShouldEqual, CartId)
+			So(response.GetBody().(*model.Cart).Id, ShouldEqual, CartId)
 		})
 	})
 
@@ -53,7 +53,7 @@ func TestGetCart(t *testing.T) {
 		cartReaderMock := NewMockCartReader(ctrl)
 
 		cartController := &CartController{
-			CartReader: cartReaderMock,
+			Reader: cartReaderMock,
 		}
 
 		const CartId = "cart12347"

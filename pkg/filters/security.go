@@ -12,7 +12,7 @@ type UserValidator interface {
 
 // The filter that validates the authentication using the Authorization header.
 type SecurityFilter struct {
-	UserValidator UserValidator `inject:""`
+	Validator UserValidator `inject:""`
 }
 
 // The middleware function.
@@ -21,7 +21,7 @@ func (recv *SecurityFilter) Execute(next http.Handler) http.Handler {
 
 		token := req.Header.Get("Authorization")
 
-		if recv.UserValidator.Validate(token) {
+		if recv.Validator.Validate(token) {
 			next.ServeHTTP(w, req)
 		} else {
 			http.Error(w, "Forbidden", http.StatusUnauthorized)
