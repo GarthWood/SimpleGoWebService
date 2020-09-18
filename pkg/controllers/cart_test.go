@@ -40,7 +40,7 @@ func TestGetCart(t *testing.T) {
 
 		Convey("It should return a valid response", func() {
 			So(response.GetError(), ShouldBeNil)
-			So(response.GetBody().(*model.Cart).Id, ShouldEqual, CartId)
+			So(response.GetResult().(*model.Cart).Id, ShouldEqual, CartId)
 		})
 	})
 
@@ -70,7 +70,7 @@ func TestGetCart(t *testing.T) {
 		Convey("It should return an error response", func() {
 			So(response.GetError().(*app.Error).Code, ShouldEqual, "some error code")
 			So(response.GetError().(*app.Error).Reason, ShouldEqual, "some reason")
-			So(response.GetBody(), ShouldBeNil)
+			So(response.GetResult(), ShouldBeNil)
 		})
 	})
 }

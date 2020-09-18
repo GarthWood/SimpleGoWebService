@@ -25,7 +25,7 @@ func writeResponse(response model.Response, writer http.ResponseWriter) {
 	if err != nil {
 		handleError(err, writer)
 	} else {
-		handleSuccess(response.GetBody(), writer)
+		handleResult(response.GetResult(), writer)
 	}
 }
 
@@ -56,12 +56,12 @@ func handleError(err error, writer http.ResponseWriter) {
 	}
 }
 
-// Completes the HTTP request with a response body and successful
+// Completes the HTTP request with a response result and successful
 // HTTP status.
-func handleSuccess(body interface{}, writer http.ResponseWriter) {
+func handleResult(result interface{}, writer http.ResponseWriter) {
 
-	if body != nil {
-		if result, err := json.Marshal(body); err != nil {
+	if result != nil {
+		if result, err := json.Marshal(result); err != nil {
 			writer.WriteHeader(http.StatusInternalServerError)
 		} else {
 			writer.WriteHeader(http.StatusOK)
