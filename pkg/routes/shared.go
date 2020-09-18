@@ -43,32 +43,34 @@ func handleError(err error, writer http.ResponseWriter) {
 		statusCode = http.StatusBadRequest
 	}
 
+	// translate the application error into an dedicated HTTP error object
+
 	herror := &httpError{
 		Reason:    appError.Reason,
 		ErrorCode: appError.Code,
 	}
 
-	if result, err := json.Marshal(herror); err != nil {
-		writer.WriteHeader(http.StatusInternalServerError)
-	} else {
-		writer.WriteHeader(statusCode)
-		writer.Write(result)
-	}
+	writeJsonResponse(herror, statusCode, writer)
 }
 
 // Completes the HTTP request with a response result and successful
 // HTTP status.
 func handleResult(result interface{}, writer http.ResponseWriter) {
+	writeJsonResponse(result, http.StatusOK, writer)
+}
 
-	if result != nil {
-		if result, err := json.Marshal(result); err != nil {
+// A helper function to write a JSON HTTP response.
+func writeJsonResponse(object interface{}, statusCode int, writer http.ResponseWriter) {
+
+	if object != nil {
+		if result, err := json.Marshal(object); err != nil {
 			writer.WriteHeader(http.StatusInternalServerError)
 		} else {
-			writer.WriteHeader(http.StatusOK)
+			writer.WriteHeader(statusCode)
 			writer.Write(result)
 		}
 	} else {
-		writer.WriteHeader(http.StatusOK)
+		writer.WriteHeader(statusCode)
 	}
 }
 
