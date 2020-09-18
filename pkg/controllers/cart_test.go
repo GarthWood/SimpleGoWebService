@@ -1,9 +1,8 @@
 package controllers
 
 import (
+	"CartService/pkg/app"
 	"CartService/pkg/model"
-	"errors"
-	"net/http"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -40,7 +39,7 @@ func TestGetCart(t *testing.T) {
 		response := cartController.GetCart(CartId)
 
 		Convey("It should return a valid response", func() {
-			So(response.GetStatus(), ShouldEqual, http.StatusOK)
+			So(response.GetError(), ShouldBeNil)
 			So(response.GetBody().(*model.Cart).Id, ShouldEqual, CartId)
 		})
 	})
@@ -58,7 +57,7 @@ func TestGetCart(t *testing.T) {
 
 		const CartId = "cart12347"
 
-		err := errors.New("some error code")
+		err := app.NewError("some reason", "some error code")
 
 		cartReaderMock.
 			EXPECT().
@@ -69,9 +68,9 @@ func TestGetCart(t *testing.T) {
 		response := cartController.GetCart(CartId)
 
 		Convey("It should return an error response", func() {
-			So(response.GetStatus(), ShouldEqual, http.StatusNotFound)
-			So(response.GetBody().(*model.ErrorBody).Reason, ShouldEqual, "Cannot find cart")
-			So(response.GetBody().(*model.ErrorBody).ErrorCode, ShouldEqual, "some error code")
+			So(response.GetError().(*app.Error).Code, ShouldEqual, "some error code")
+			So(response.GetError().(*app.Error).Reason, ShouldEqual, "some reason")
+			So(response.GetBody(), ShouldBeNil)
 		})
 	})
 }

@@ -1,13 +1,9 @@
 // The model package contains all the data containers.
 package model
 
-import (
-	"net/http"
-)
-
 // An abstaction representing a generic response
 type Response interface {
-	GetStatus() int
+	GetError() error
 	GetBody() interface{}
 }
 
@@ -16,25 +12,24 @@ type Response interface {
 func NewSuccessResponse(body interface{}) Response {
 
 	resp := &response{
-		statusCode: http.StatusOK,
-		body:       body,
+		body: body,
 	}
 
 	return resp
 }
 
+// Create a new response containing an empty response body
+// to be returned to the client.
+func NewEmptySuccessResponse() Response {
+	return &response{}
+}
+
 // Create a new response containing an error HTTP status code and an error response body
 // to be returned to the client.
-func NewErrorResponse(statusCode int, reason string, errorCode string) Response {
-
-	body := &ErrorBody{
-		Reason:    reason,
-		ErrorCode: errorCode,
-	}
+func NewErrorResponse(err error) Response {
 
 	resp := &response{
-		statusCode: statusCode,
-		body:       body,
+		err: err,
 	}
 
 	return resp
@@ -42,20 +37,14 @@ func NewErrorResponse(statusCode int, reason string, errorCode string) Response 
 
 // The base response data object.
 type response struct {
-	statusCode int
-	body       interface{}
+	err  error
+	body interface{}
 }
 
-func (recv *response) GetStatus() int {
-	return recv.statusCode
+func (recv *response) GetError() error {
+	return recv.err
 }
 
 func (recv *response) GetBody() interface{} {
 	return recv.body
-}
-
-// The error response data object return for all HTTP errors.
-type ErrorBody struct {
-	Reason    string `json:"reason"`
-	ErrorCode string `json:"errorCode"`
 }

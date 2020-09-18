@@ -3,7 +3,6 @@ package controllers
 
 import (
 	"CartService/pkg/model"
-	"net/http"
 )
 
 // The CartReader provide an abstraction to fetch a cart.
@@ -28,7 +27,7 @@ type CartController struct {
 func (recv *CartController) GetCart(cartId string) model.Response {
 
 	if cart, err := recv.Reader.FetchCart(cartId); err != nil {
-		return model.NewErrorResponse(http.StatusNotFound, "Cannot find cart", err.Error())
+		return model.NewErrorResponse(err)
 	} else {
 		return model.NewSuccessResponse(cart)
 	}
@@ -43,8 +42,8 @@ func (recv *CartController) CreateCart() model.Response {
 	}
 
 	if err := recv.Writer.WriteCart(cart); err != nil {
-		return model.NewErrorResponse(http.StatusBadRequest, "Cart already exists", err.Error())
+		return model.NewErrorResponse(err)
 	} else {
-		return model.NewSuccessResponse(nil)
+		return model.NewEmptySuccessResponse()
 	}
 }
